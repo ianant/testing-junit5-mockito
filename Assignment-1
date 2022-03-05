@@ -1,0 +1,7 @@
+Write Mockito tests for VET service.
+
+1: Create test for VetSDJpaService
+2: Use Mockito Extention
+3: Use @Mock / @InjectMocks
+4: Write tests for DeleteById
+5: Verify mocked method is called one time.
