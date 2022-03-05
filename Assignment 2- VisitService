@@ -1,0 +1,8 @@
+Complete tests for Visit Service
+
+1: Class under test is VisitSDJpaService
+2: Use Mockito to write test for Visit Service.
+3: Use Mockito JUnit extension
+4: Use annotation @Mock and @InjectMocks
+5: Use Argument matcher
+6: Verify your test coverage.
