@@ -31,12 +31,13 @@ class SpecialitySDJpaServiceTest {
         when(specialtyRepository.findById(1l)).thenReturn(Optional.of(speciality));
         Speciality foundSpeciality=service.findById(1l);
         assertThat(foundSpeciality).isNotNull();
-        verify(specialtyRepository,times(1)).findById(1l);
+        verify(specialtyRepository,times(1)).findById(anyLong());
     }
 
     @Test
     void delete() {
         specialtyRepository.delete(new Speciality());
+        verify(specialtyRepository).delete(any(Speciality.class));
     }
 
     @Test
