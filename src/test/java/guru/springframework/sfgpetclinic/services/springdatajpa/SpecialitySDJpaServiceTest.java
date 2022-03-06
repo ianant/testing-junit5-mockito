@@ -14,8 +14,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -91,6 +90,25 @@ class SpecialitySDJpaServiceTest {
        // verify(specialtyRepository, atMost(2)).deleteById(1l);
         then(specialtyRepository).should(atMost(2)).deleteById(1l);
     }
+    @Test
+    void testDoThrow(){
+        doThrow(new RuntimeException("boom")).when(specialtyRepository).delete(any());
+        assertThrows(RuntimeException.class,()->specialtyRepository.delete(new Speciality()));
+        verify(specialtyRepository).delete(any(Speciality.class));
+    }
 
+    @Test
+    void findByIdThrows(){
+        given(specialtyRepository.findById(1l)).willThrow(new RuntimeException("Boom"));
+        assertThrows(RuntimeException.class,()->service.findById(1l));
+        then(specialtyRepository).should().findById(1l);
+    }
 
+    @Test
+    void testDeleteBDD(){
+        willThrow(new RuntimeException()).given(specialtyRepository).delete(any());
+        //this is mostly usefull when a method has void return type::
+        assertThrows(RuntimeException.class,()->specialtyRepository.delete(new Speciality()));
+        then(specialtyRepository).should().delete(any());
+    }
 }
