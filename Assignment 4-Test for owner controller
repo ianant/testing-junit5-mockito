@@ -1,0 +1,9 @@
+Assignment: Write test for Owner Controller:
+
+1: Create a Test for owner Controller
+2: Test method, processCreationForm
+3: Write test to check view returned if binding results has error
+4: write second test to check view returned if binding result has no error
+5: Make controller return view "redirect:/owners/5"
+6: Use Mockito as needed
+7: Verify mock interactions
