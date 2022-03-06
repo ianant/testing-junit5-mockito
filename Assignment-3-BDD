@@ -1,0 +1,5 @@
+BDD Visit service:
+
+1-Convert test "VisitSDJpaServiceTest" to BDD
+2-Add given-when-then comments
+3-Use Mockito BDD Methods -'given' and 'then'

@@ -92,4 +92,5 @@ class SpecialitySDJpaServiceTest {
         then(specialtyRepository).should(atMost(2)).deleteById(1l);
     }
 
+
 }
