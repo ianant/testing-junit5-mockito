@@ -1,6 +1,7 @@
 package guru.springframework.sfgpetclinic.controllers;
 
 import guru.springframework.sfgpetclinic.fauxspring.BindingResult;
+import guru.springframework.sfgpetclinic.fauxspring.Model;
 import guru.springframework.sfgpetclinic.model.Owner;
 import guru.springframework.sfgpetclinic.services.OwnerService;
 import org.junit.jupiter.api.Disabled;
@@ -29,11 +30,15 @@ class OwnerControllerTest {
     @Mock
     BindingResult result;
 
+    @Mock
+    Model model;
+
     @InjectMocks
     OwnerController controller;
 
     @Captor
     ArgumentCaptor<String> captorAnnotation;
+
 
     //this method shows the way to implement ArgumentCaptor without annotation
     @Test
@@ -62,6 +67,96 @@ class OwnerControllerTest {
         //then
         assertThat(returnValue).isEqualTo("owners/findOwners");
         assertThat("%tripathi%").isEqualTo(captorAnnotation.getValue());
+    }
+
+    @Test
+    void processFindFormTestIfReturnedListisEmpty(){
+
+        //Given
+        Owner owner=new Owner(1l,"Anant","Not Found");
+        Owner owner2=new Owner(2l,"Anant","Found");
+        Owner owner3=new Owner(3l,"Anant","Tripathi");
+        List<Owner> emptyList=new ArrayList<>();
+        given(ownerService.findAllByLastNameLike(captorAnnotation.capture())).willAnswer(
+                invocation ->{
+                  String name= invocation.getArgument(0);
+                  if(name.equals("%Not Found%")){
+                      return emptyList;
+                  }else if(name.equals("%Found%")){
+                      emptyList.add(owner2);
+                      return emptyList;
+                  }else{
+                      emptyList.add(owner2);
+                      emptyList.add(owner);
+                      return emptyList;
+                  }
+                });
+
+        //When
+        String viewName=controller.processFindForm(owner,result,model);
+        //Then
+        assertThat(viewName).isEqualTo("owners/findOwners");
+        assertThat("%Not Found%").isEqualTo(captorAnnotation.getValue());
+    }
+
+    @Test
+    void processFindFormTestIfReturnedListSizeIs1(){
+
+        //Given
+        Owner owner=new Owner(1l,"Anant","Not Found");
+        Owner owner2=new Owner(2l,"Anant","Found");
+        Owner owner3=new Owner(3l,"Anant","Tripathi");
+        List<Owner> emptyList=new ArrayList<>();
+        given(ownerService.findAllByLastNameLike(captorAnnotation.capture())).willAnswer(
+                invocation ->{
+                    String name= invocation.getArgument(0);
+                    if(name.equals("%Not Found%")){
+                        return emptyList;
+                    }else if(name.equals("%Found%")){
+                        emptyList.add(owner2);
+                        return emptyList;
+                    }else{
+                        emptyList.add(owner2);
+                        emptyList.add(owner);
+                        return emptyList;
+                    }
+                });
+
+        //When
+        String viewName=controller.processFindForm(owner2,result,model);
+        //Then
+        assertThat(viewName).isEqualTo("redirect:/owners/2");
+        assertThat("%Found%").isEqualTo(captorAnnotation.getValue());
+    }
+
+    @Test
+    void processFindFormTestIfReturnedListSizeIsMoreThan1(){
+
+        //Given
+        Owner owner=new Owner(1l,"Anant","Not Found");
+        Owner owner2=new Owner(2l,"Anant","Found");
+        Owner owner3=new Owner(3l,"Anant","Tripathi");
+        List<Owner> emptyList=new ArrayList<>();
+        given(ownerService.findAllByLastNameLike(captorAnnotation.capture())).willAnswer(
+                invocation ->{
+                    String name= invocation.getArgument(0);
+                    if(name.equals("%Not Found%")){
+                        return emptyList;
+                    }else if(name.equals("%Found%")){
+                        emptyList.add(owner2);
+                        return emptyList;
+                    }else{
+                        emptyList.add(owner2);
+                        emptyList.add(owner);
+                        return emptyList;
+                    }
+                });
+
+        //When
+        String viewName=controller.processFindForm(owner3,result,model);
+        //Then
+        assertThat(viewName).isEqualTo("owners/ownersList");
+        assertThat("%Tripathi%").isEqualTo(captorAnnotation.getValue());
     }
 
     @Test
